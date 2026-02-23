@@ -3,7 +3,8 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 import os
 from controller.usuario_controller import usuario
-from model.usuario_model import db
+from controller.produto_controller import produto
+from model.model_banco import db
 
 app = Flask(__name__)
 
@@ -15,6 +16,7 @@ with app.app_context():
     db.create_all()
 
 usuario(app)
+produto(app)
 
 if __name__ == '__main__':
     app.run(debug=True)

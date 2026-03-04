@@ -1,0 +1,44 @@
+from flask import request, jsonify
+
+class UsuarioController:
+    def __init__(self, criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case):
+        self.criar_usuario_use_case = criar_usuario_use_case
+        self.listar_usuarios_use_case = listar_usuarios_use_case
+        self.confirmar_cadastro_use_case = confirmar_cadastro_use_case
+    
+    def criar_usuario(self):
+        data = request.get_json()
+        usuario = self.criar_usuario_use_case.execute(
+            nome=data.get('nome'),
+            cnpj=data.get('cnpj'),
+            email=data.get('email'),
+            celular=data.get('celular'),
+            senha=data.get('senha')
+        )
+        return jsonify({
+            'mensagem': 'Usuário salvo, mas aguardando verificação de SMS.',
+            'id_usuario': usuario.id
+        }), 201
+    
+    def listar_usuario(self):
+        usuarios = self.listar_usuarios_use_case.execute()
+        return jsonify([{
+            'id': u.id,
+            'nome': u.nome,
+            'cnpj': u.cnpj,
+            'email': u.email,
+            'celular': u.celular,
+            'status': u.status
+        } for u in usuarios])
+    
+    def confirmar_cadastro(self, id):
+        data = request.get_json()
+        codigo = data.get('codigo_otp')
+        
+        try:
+            verificado = self.confirmar_cadastro_use_case.execute(id, codigo)
+            if verificado:
+                return jsonify({'mensagem': 'Conta ativada com sucesso!'}), 200
+            return jsonify({'erro': 'Código inválido'}), 400
+        except ValueError as e:
+            return jsonify({'erro': str(e)}), 404

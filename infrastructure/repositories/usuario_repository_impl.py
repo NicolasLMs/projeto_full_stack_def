@@ -16,7 +16,7 @@ class UsuarioRepositoryImpl(UsuarioRepository):
             )
             db.session.add(usuario_model)
             db.session.commit()
-            usuario.id = usuario_model.id
+            usuario.email = usuario_model.email
             return usuario
         except IntegrityError as e:
             db.session.rollback()
@@ -38,8 +38,8 @@ class UsuarioRepositoryImpl(UsuarioRepository):
             status=u.status
         ) for u in usuarios_model]
     
-    def buscar_por_id(self, id):
-        usuario_model = UsuarioModel.query.get(id)
+    def buscar_por_id(self, email):
+        usuario_model = UsuarioModel.query.filter_by(email = email).first()
         if not usuario_model:
             return None
         return Usuario(

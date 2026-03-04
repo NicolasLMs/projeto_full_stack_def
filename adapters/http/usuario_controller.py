@@ -18,7 +18,7 @@ class UsuarioController:
             )
             return jsonify({
                 'mensagem': 'Usuário salvo, mas aguardando verificação de SMS.',
-                'id_usuario': usuario.id
+                'email': usuario.email
             }), 201
         except ValueError as e:
             return jsonify({'erro': str(e)}), 400
@@ -37,12 +37,12 @@ class UsuarioController:
             'status': u.status
         } for u in usuarios])
     
-    def confirmar_cadastro(self, id):
+    def confirmar_cadastro(self, email):
         data = request.get_json()
         codigo = data.get('codigo_otp')
         
         try:
-            verificado = self.confirmar_cadastro_use_case.execute(id, codigo)
+            verificado = self.confirmar_cadastro_use_case.execute(email, codigo)
             if verificado:
                 return jsonify({'mensagem': 'Conta ativada com sucesso!'}), 200
             return jsonify({'erro': 'Código inválido'}), 400

@@ -33,8 +33,8 @@ class ProdutoRepositoryImpl(ProdutoRepository):
             status=p.status
         ) for p in produtos_model]
     
-    def buscar_por_id(self, id):
-        produto_model = ProdutoModel.query.get(id)
+    def buscar_por_id(self, email):
+        produto_model = ProdutoModel.query.filter_by(email = email).first()
         if not produto_model:
             return None
         return Produto(

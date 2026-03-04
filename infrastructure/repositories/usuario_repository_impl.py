@@ -4,18 +4,27 @@ from infrastructure.database.models import db, UsuarioModel
 
 class UsuarioRepositoryImpl(UsuarioRepository):
     def criar(self, usuario):
-        usuario_model = UsuarioModel(
-            nome=usuario.nome,
-            cnpj=usuario.cnpj,
-            email=usuario.email,
-            celular=usuario.celular,
-            senha=usuario.senha,
-            status=usuario.status
-        )
-        db.session.add(usuario_model)
-        db.session.commit()
-        usuario.id = usuario_model.id
-        return usuario
+        from sqlalchemy.exc import IntegrityError
+        try:
+            usuario_model = UsuarioModel(
+                nome=usuario.nome,
+                cnpj=usuario.cnpj,
+                email=usuario.email,
+                celular=usuario.celular,
+                senha=usuario.senha,
+                status=usuario.status
+            )
+            db.session.add(usuario_model)
+            db.session.commit()
+            usuario.id = usuario_model.id
+            return usuario
+        except IntegrityError as e:
+            db.session.rollback()
+            if 'usuario.email' in str(e):
+                raise ValueError('Email já cadastrado')
+            elif 'usuario.cnpj' in str(e):
+                raise ValueError('CNPJ já cadastrado')
+            raise ValueError('Erro ao cadastrar usuário')
     
     def listar_todos(self):
         usuarios_model = UsuarioModel.query.all()

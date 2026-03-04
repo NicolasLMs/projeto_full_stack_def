@@ -8,17 +8,23 @@ class UsuarioController:
     
     def criar_usuario(self):
         data = request.get_json()
-        usuario = self.criar_usuario_use_case.execute(
-            nome=data.get('nome'),
-            cnpj=data.get('cnpj'),
-            email=data.get('email'),
-            celular=data.get('celular'),
-            senha=data.get('senha')
-        )
-        return jsonify({
-            'mensagem': 'Usuário salvo, mas aguardando verificação de SMS.',
-            'id_usuario': usuario.id
-        }), 201
+        try:
+            usuario = self.criar_usuario_use_case.execute(
+                nome=data.get('nome'),
+                cnpj=data.get('cnpj'),
+                email=data.get('email'),
+                celular=data.get('celular'),
+                senha=data.get('senha')
+            )
+            return jsonify({
+                'mensagem': 'Usuário salvo, mas aguardando verificação de SMS.',
+                'id_usuario': usuario.id
+            }), 201
+        except ValueError as e:
+            return jsonify({'erro': str(e)}), 400
+        except Exception as e:
+            print(f"Erro inesperado: {e}")
+            return jsonify({'erro': 'Erro ao cadastrar usuário', 'detalhes': str(e)}), 500
     
     def listar_usuario(self):
         usuarios = self.listar_usuarios_use_case.execute()

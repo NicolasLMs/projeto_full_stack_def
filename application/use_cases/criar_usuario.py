@@ -8,5 +8,11 @@ class CriarUsuarioUseCase:
     def execute(self, nome, cnpj, email, celular, senha):
         usuario = Usuario(nome, cnpj, email, celular, senha)
         usuario_criado = self.usuario_repository.criar(usuario)
-        self.sms_service.enviar_verificacao(celular)
+        
+        try:
+            self.sms_service.enviar_verificacao(celular)
+        except Exception as e:
+            # SMS falhou mas usuário foi criado
+            print(f"Erro ao enviar SMS: {e}")
+        
         return usuario_criado

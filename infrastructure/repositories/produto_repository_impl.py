@@ -4,18 +4,22 @@ from infrastructure.database.models import db, ProdutoModel
 
 class ProdutoRepositoryImpl(ProdutoRepository):
     def criar(self, produto):
-        produto_model = ProdutoModel(
-            nome=produto.nome,
-            preco=produto.preco,
-            quantidade=produto.quantidade,
-            imagem=produto.imagem,
-            id_usuario=produto.id_usuario,
-            status=produto.status
-        )
-        db.session.add(produto_model)
-        db.session.commit()
-        produto.id = produto_model.id
-        return produto
+        try:
+            produto_model = ProdutoModel(
+                nome=produto.nome,
+                preco=produto.preco,
+                quantidade=produto.quantidade,
+                imagem=produto.imagem,
+                id_usuario=produto.id_usuario,
+                status=produto.status
+            )
+            db.session.add(produto_model)
+            db.session.commit()
+            produto.id = produto_model.id
+            return produto
+        except Exception as e:
+            db.session.rollback()
+            raise ValueError('Erro ao cadastrar produto')
     
     def listar_todos(self):
         produtos_model = ProdutoModel.query.all()

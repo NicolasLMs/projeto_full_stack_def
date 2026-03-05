@@ -63,7 +63,5 @@ class UsuarioRepositoryImpl(UsuarioRepository):
             usuario_model.status = usuario.status
             db.session.commit()
         return usuario
-    
-    def login(self, email):
-        return UsuarioModel.query.filter_by(email=email).first()
+
             

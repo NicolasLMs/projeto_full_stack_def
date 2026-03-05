@@ -53,12 +53,11 @@ class UsuarioController:
         
     def login(self):
         dados = request.get_json()
-        email = dados.get('email')
-        senha = dados.get('senha')
-
-        token = self.login_use_case.execute(email, senha)
-
-        if token:
+        try:
+            token = self.login_use_case.execute(dados.get('email'), dados.get('senha'))
             return jsonify({"access_token": token}), 200
-        
-        return jsonify({"erro": "Email ou senha inválidos"}), 401
+            
+        except ValueError as e:
+            return jsonify({"erro": str(e)}), 401
+        except Exception as e:
+            return jsonify({"erro": "Erro interno no servidor"}), 500

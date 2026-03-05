@@ -17,7 +17,4 @@ class UsuarioRepository(ABC):
     def atualizar(self, usuario):
         pass
 
-    @abstractmethod
-    def login(self, email, senha):
-        pass
 

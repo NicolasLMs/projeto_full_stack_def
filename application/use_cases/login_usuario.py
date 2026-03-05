@@ -6,15 +6,16 @@ class LoginUseCase:
         self.hash_service = hash_service
 
     def execute(self, email, senha_plana):
-        usuario_model = self.repo.buscar_por_email(email)
 
-        if not usuario_model:
-            return None
+        usuario = self.repo.buscar_por_email(email)
+
+        if not usuario:
+            return "Usuário não localizado"
         
-        senha_valida = self.hash_service.verifica_senha(senha_plana, usuario_model.senha)
+        senha_valida = self.hash_service.verifica_senha(senha_plana, usuario.senha)
         
         if senha_valida:
-            token = create_access_token(identity=str(usuario_model.id))
+            token = create_access_token(identity=str(usuario.id))
             return token
             
         return None

@@ -1,10 +1,12 @@
 from flask import request, jsonify
+from flask_jwt_extended import jwt_required
 
 class UsuarioController:
-    def __init__(self, criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case):
+    def __init__(self, criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case):
         self.criar_usuario_use_case = criar_usuario_use_case
         self.listar_usuarios_use_case = listar_usuarios_use_case
         self.confirmar_cadastro_use_case = confirmar_cadastro_use_case
+        self.login_use_case = login_use_case
     
     def criar_usuario(self):
         data = request.get_json()
@@ -25,7 +27,7 @@ class UsuarioController:
         except Exception as e:
             print(f"Erro inesperado: {e}")
             return jsonify({'erro': 'Erro ao cadastrar usuário', 'detalhes': str(e)}), 500
-    
+
     def listar_usuario(self):
         usuarios = self.listar_usuarios_use_case.execute()
         return jsonify([{
@@ -48,3 +50,15 @@ class UsuarioController:
             return jsonify({'erro': 'Código inválido'}), 400
         except ValueError as e:
             return jsonify({'erro': str(e)}), 404
+        
+    def login(self):
+        dados = request.get_json()
+        email = dados.get('email')
+        senha = dados.get('senha')
+
+        token = self.login_use_case.execute(email, senha)
+
+        if token:
+            return jsonify({"access_token": token}), 200
+        
+        return jsonify({"erro": "Email ou senha inválidos"}), 401

@@ -1,10 +1,12 @@
 from flask import request, jsonify
+from flask_jwt_extended import jwt_required
 
 class ProdutoController:
     def __init__(self, criar_produto_use_case, listar_produtos_use_case):
         self.criar_produto_use_case = criar_produto_use_case
         self.listar_produtos_use_case = listar_produtos_use_case
     
+    @jwt_required()
     def criar_produto(self):
         data = request.get_json()
         produto = self.criar_produto_use_case.execute(
@@ -16,6 +18,7 @@ class ProdutoController:
         )
         return jsonify({'mensagem': 'produto cadastrado com sucesso'}), 201
     
+    @jwt_required()
     def listar_produtos(self, id=None):
         if id:
             produto = self.listar_produtos_use_case.execute(id)

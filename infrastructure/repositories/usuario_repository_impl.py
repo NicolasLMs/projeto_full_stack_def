@@ -38,8 +38,8 @@ class UsuarioRepositoryImpl(UsuarioRepository):
             status=u.status
         ) for u in usuarios_model]
     
-    def buscar_por_id(self, id):
-        usuario_model = UsuarioModel.query.get(id)
+    def buscar_por_email(self, email):
+        usuario_model = UsuarioModel.query.filter_by(email=email).first()
         if not usuario_model:
             return None
         return Usuario(

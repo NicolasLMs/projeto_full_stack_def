@@ -7,6 +7,7 @@ from infrastructure.database.models import db
 from infrastructure.repositories.usuario_repository_impl import UsuarioRepositoryImpl
 from infrastructure.repositories.produto_repository_impl import ProdutoRepositoryImpl
 from infrastructure.services.twilio_sms_service import TwilioSmsService
+from infrastructure.services.hash_service import HashService
 
 from application.use_cases.criar_usuario import CriarUsuarioUseCase
 from application.use_cases.listar_usuarios import ListarUsuariosUseCase
@@ -39,12 +40,13 @@ with app.app_context():
 usuario_repository = UsuarioRepositoryImpl()
 produto_repository = ProdutoRepositoryImpl()
 sms_service = TwilioSmsService()
+hash_service = HashService()
 
 # Casos de uso
-criar_usuario_use_case = CriarUsuarioUseCase(usuario_repository, sms_service)
+criar_usuario_use_case = CriarUsuarioUseCase(usuario_repository, sms_service, hash_service)
 listar_usuarios_use_case = ListarUsuariosUseCase(usuario_repository)
 confirmar_cadastro_use_case = ConfirmarCadastroUsuarioUseCase(usuario_repository, sms_service)
-login_use_case = LoginUseCase(usuario_repository)
+login_use_case = LoginUseCase(usuario_repository, hash_service)
 criar_produto_use_case = CriarProdutoUseCase(produto_repository)
 listar_produtos_use_case = ListarProdutosUseCase(produto_repository)
 

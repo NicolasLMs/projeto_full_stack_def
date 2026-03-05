@@ -27,7 +27,7 @@ class UsuarioController:
         except Exception as e:
             print(f"Erro inesperado: {e}")
             return jsonify({'erro': 'Erro ao cadastrar usuário', 'detalhes': str(e)}), 500
-
+    @jwt_required()
     def listar_usuario(self):
         usuarios = self.listar_usuarios_use_case.execute()
         return jsonify([{

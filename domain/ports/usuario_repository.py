@@ -10,7 +10,7 @@ class UsuarioRepository(ABC):
         pass
     
     @abstractmethod
-    def buscar_por_id(self, id):
+    def buscar_por_email(self, email):
         pass
     
     @abstractmethod

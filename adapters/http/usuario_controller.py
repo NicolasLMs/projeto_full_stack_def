@@ -2,11 +2,12 @@ from flask import request, jsonify
 from flask_jwt_extended import jwt_required
 
 class UsuarioController:
-    def __init__(self, criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case):
+    def __init__(self, criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case, Buscar_por_EmailUsuarioUseCase):
         self.criar_usuario_use_case = criar_usuario_use_case
         self.listar_usuarios_use_case = listar_usuarios_use_case
         self.confirmar_cadastro_use_case = confirmar_cadastro_use_case
         self.login_use_case = login_use_case
+        self.Buscar_por_EmailUsuarioUseCase = Buscar_por_EmailUsuarioUseCase
     
     def criar_usuario(self):
         data = request.get_json()
@@ -20,7 +21,7 @@ class UsuarioController:
             )
             return jsonify({
                 'mensagem': 'Usuário salvo, mas aguardando verificação de SMS.',
-                'id_usuario': usuario.id
+                'email': usuario.email
             }), 201
         except ValueError as e:
             return jsonify({'erro': str(e)}), 400
@@ -39,12 +40,12 @@ class UsuarioController:
             'status': u.status
         } for u in usuarios])
     
-    def confirmar_cadastro(self, id):
+    def confirmar_cadastro(self, email):
         data = request.get_json()
         codigo = data.get('codigo_otp')
         
         try:
-            verificado = self.confirmar_cadastro_use_case.execute(id, codigo)
+            verificado = self.confirmar_cadastro_use_case.execute(email, codigo)
             if verificado:
                 return jsonify({'mensagem': 'Conta ativada com sucesso!'}), 200
             return jsonify({'erro': 'Código inválido'}), 400
@@ -61,3 +62,35 @@ class UsuarioController:
             return jsonify({"erro": str(e)}), 401
         except Exception as e:
             return jsonify({"erro": "Erro interno no servidor"}), 500
+
+
+    def atualizar_usuario(self, email):
+        data = request.get_json()
+        try:
+            usuario = self.confirmar_cadastro_use_case.usuario_repository.buscar_por_email(email)
+            if not usuario:
+                return jsonify({'erro': 'Usuário não encontrado'}), 404
+            
+            usuario.nome = data.get('nome', usuario.nome)
+            usuario.cnpj = data.get('cnpj', usuario.cnpj)
+            usuario.celular = data.get('celular', usuario.celular)
+            usuario.senha = data.get('senha', usuario.senha)
+            
+            self.confirmar_cadastro_use_case.usuario_repository.atualizar(usuario)
+            return jsonify({'mensagem': 'Usuário atualizado com sucesso!'}), 200
+        except Exception as e:
+            return jsonify({'erro': 'Erro ao atualizar usuário', 'detalhes': str(e)}), 500
+        
+
+    
+    def buscar_por_email_usuario(self, email):
+        data = request.get_json()
+        try:
+            usuario = self.confirmar_cadastro_use_case.usuario_repository.buscar_por_email(email)
+            if not usuario:
+                return jsonify({'erro': 'Usuário não encontrado'}), 404
+            
+            return jsonify(usuario), 200
+            
+        except Exception as e:
+            return jsonify({'erro': 'Erro ao tentar encontrar usuário', 'detalhes': str(e)}), 500

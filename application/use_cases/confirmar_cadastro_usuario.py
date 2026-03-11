@@ -3,8 +3,8 @@ class ConfirmarCadastroUsuarioUseCase:
         self.usuario_repository = usuario_repository
         self.sms_service = sms_service
     
-    def execute(self, id, codigo_otp):
-        usuario = self.usuario_repository.buscar_por_id(id)
+    def execute(self, email, codigo_otp):
+        usuario = self.usuario_repository.buscar_por_email(email)
         if not usuario:
             raise ValueError('Usuário não encontrado')
         

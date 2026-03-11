@@ -7,5 +7,6 @@
     "editor.suggestOnTriggerCharacters": true,
     "files.associations": {
         "plyconfig.json": "jsonc"
-    }
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }

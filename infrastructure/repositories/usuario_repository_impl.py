@@ -16,7 +16,7 @@ class UsuarioRepositoryImpl(UsuarioRepository):
             )
             db.session.add(usuario_model)
             db.session.commit()
-            usuario.id = usuario_model.id
+            usuario.email = usuario_model.email
             return usuario
         except IntegrityError as e:
             db.session.rollback()
@@ -53,7 +53,7 @@ class UsuarioRepositoryImpl(UsuarioRepository):
         )
     
     def atualizar(self, usuario):
-        usuario_model = UsuarioModel.query.get(usuario.id)
+        usuario_model = UsuarioModel.query(usuario.id)
         if usuario_model:
             usuario_model.nome = usuario.nome
             usuario_model.cnpj = usuario.cnpj

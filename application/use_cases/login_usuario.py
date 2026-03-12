@@ -5,14 +5,16 @@ class LoginUseCase:
         self.repo = usuario_repository
         self.hash_service = hash_service
 
-    def execute(self, email, senha_plana):
+    def execute(self, email, senha):
 
         usuario = self.repo.buscar_por_email(email)
 
         if not usuario:
             return "Usuário não localizado"
         
-        senha_valida = self.hash_service.verifica_senha(senha_plana, usuario.senha)
+        senha_str = str(senha)
+        
+        senha_valida = self.hash_service.verifica_senha(senha_str, usuario.senha)
         
         if senha_valida:
             token = create_access_token(identity=str(usuario.id))

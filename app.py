@@ -13,6 +13,7 @@ from application.use_cases.criar_usuario import CriarUsuarioUseCase
 from application.use_cases.listar_usuarios import ListarUsuariosUseCase
 from application.use_cases.confirmar_cadastro_usuario import ConfirmarCadastroUsuarioUseCase
 from application.use_cases.login_usuario import LoginUseCase
+from application.use_cases.buscar_por_email import Buscar_por_EmailUsuarioUseCase
 from application.use_cases.criar_produto import CriarProdutoUseCase
 from application.use_cases.listar_produtos import ListarProdutosUseCase
 
@@ -47,11 +48,12 @@ criar_usuario_use_case = CriarUsuarioUseCase(usuario_repository, sms_service, ha
 listar_usuarios_use_case = ListarUsuariosUseCase(usuario_repository)
 confirmar_cadastro_use_case = ConfirmarCadastroUsuarioUseCase(usuario_repository, sms_service)
 login_use_case = LoginUseCase(usuario_repository, hash_service)
+buscar_usuario_use_case= LoginUseCase(usuario_repository, sms_service)
 criar_produto_use_case = CriarProdutoUseCase(produto_repository)
 listar_produtos_use_case = ListarProdutosUseCase(produto_repository)
 
 # Controllers
-usuario_controller = UsuarioController(criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case)
+usuario_controller = UsuarioController(criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case, buscar_usuario_use_case)
 produto_controller = ProdutoController(criar_produto_use_case, listar_produtos_use_case)
 
 # Rotas

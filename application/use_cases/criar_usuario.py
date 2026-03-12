@@ -6,8 +6,8 @@ class CriarUsuarioUseCase:
         self.sms_service = sms_service
         self.hash_service = hash_service
     
-    def execute(self, nome, cnpj, email, celular, senha_plana):
-        senha_hash = self.hash_service.hash_senha(senha_plana)
+    def execute(self, nome, cnpj, email, celular, senha):
+        senha_hash = self.hash_service.hash_senha(senha)
         
         usuario = Usuario(nome, cnpj, email, celular, senha_hash)
         

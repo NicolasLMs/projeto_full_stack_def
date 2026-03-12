@@ -53,7 +53,7 @@ class UsuarioRepositoryImpl(UsuarioRepository):
         )
     
     def atualizar(self, usuario):
-        usuario_model = UsuarioModel.query(usuario.id)
+        usuario_model = UsuarioModel.query.filter_by(id=usuario.id).first()
         if usuario_model:
             usuario_model.nome = usuario.nome
             usuario_model.cnpj = usuario.cnpj

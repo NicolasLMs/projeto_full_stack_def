@@ -12,8 +12,10 @@ class LoginUseCase:
         if not usuario:
             return "Usuário não localizado"
         
-        senha_str = str(senha)
+        if usuario.status is not True:
+            return "Conta inativa ou pendente de verificação."
         
+        senha_str = str(senha)
         senha_valida = self.hash_service.verifica_senha(senha_str, usuario.senha)
         
         if senha_valida:

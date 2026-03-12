@@ -49,12 +49,12 @@ class TwilioSmsService:
 
             self.codigos[numero] = codigo
 
-            print(f"✅ Código enviado para {numero}")
+            print(f"Código enviado para {numero}")
             return message.sid
 
         except TwilioRestException as e:
 
-            print(f"❌ Erro Twilio: {e.msg}")
+            print(f"Erro Twilio: {e.msg}")
             raise
 
     def verificar_codigo(self, celular: str, codigo: str):
@@ -64,14 +64,14 @@ class TwilioSmsService:
         codigo_salvo = self.codigos.get(numero)
 
         if not codigo_salvo:
-            print("🚫 Nenhum código enviado")
+            print("Nenhum código enviado")
             return False
 
         if str(codigo_salvo) == str(codigo):
 
-            print("✨ Código válido")
+            print("Código válido")
             del self.codigos[numero]
             return True
 
-        print("🚫 Código incorreto")
+        print("Código incorreto")
         return False

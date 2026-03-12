@@ -21,7 +21,6 @@ class TwilioSmsService:
 
         self.client = Client(self.account_sid, self.auth_token)
 
-        # armazenamento temporário dos códigos
         self.codigos = {}
 
     def _limpar_numero(self, celular: str):

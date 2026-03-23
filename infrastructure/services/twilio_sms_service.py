@@ -23,7 +23,7 @@ class TwilioSmsService:
 
         self.codigos = {}
 
-    def _limpar_numero(self, celular: str):
+    def limpar_numero(self, celular: str):
 
         apenas_numeros = re.sub(r"\D", "", celular)
 
@@ -34,7 +34,7 @@ class TwilioSmsService:
 
     def enviar_verificacao(self, celular: str):
 
-        numero = self._limpar_numero(celular)
+        numero = self.limpar_numero(celular)
 
         codigo = random.randint(100000, 999999)
 
@@ -59,7 +59,7 @@ class TwilioSmsService:
 
     def verificar_codigo(self, celular: str, codigo: str):
 
-        numero = self._limpar_numero(celular)
+        numero = self.limpar_numero(celular)
 
         codigo_salvo = self.codigos.get(numero)
 

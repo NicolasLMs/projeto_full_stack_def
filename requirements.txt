@@ -6,4 +6,4 @@ sqlalchemy==1.4.49
 python-dotenv==0.19.2
 twilio==7.16.0
 Flask-JWT-Extended
-bcrypt == 6.0.0
+bcrypt == 5.0.0

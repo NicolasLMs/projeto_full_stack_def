@@ -90,6 +90,8 @@ class UsuarioController:
 
             return jsonify({
                 "id": usuario.id,
+                "nome": usuario.nome,
+                "telefone":usuario.celular,
                 "email": usuario.email,
                 "status": usuario.status
             }), 200

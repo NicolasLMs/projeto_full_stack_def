@@ -4,4 +4,4 @@ from datetime import timedelta
 
 class JWTService(TokenService):
     def gerar_token(self, id):
-        return create_access_token(identity=id, expires_delta=timedelta(minutes=5))
+        return create_access_token(identity=str(id), expires_delta=timedelta(minutes=5))

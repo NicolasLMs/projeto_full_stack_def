@@ -2,12 +2,13 @@ from flask import request, jsonify
 from flask_jwt_extended import jwt_required
 
 class UsuarioController:
-    def __init__(self, criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case, buscar_usuario_por_email_use_case):
+    def __init__(self, criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case, buscar_usuario_por_email_use_case, atualizar_cadastro_use_case):
         self.criar_usuario_use_case = criar_usuario_use_case
         self.listar_usuarios_use_case = listar_usuarios_use_case
         self.confirmar_cadastro_use_case = confirmar_cadastro_use_case
         self.login_use_case = login_use_case
         self.buscar_usuario_por_email_use_case = buscar_usuario_por_email_use_case
+        self.atualizar_cadastro_use_case = atualizar_cadastro_use_case
     
     def criar_usuario(self):
         data = request.get_json()
@@ -64,40 +65,35 @@ class UsuarioController:
             return jsonify({"erro": "Erro interno no servidor"}), 500
 
 
+    @jwt_required()
     def atualizar_usuario(self, email):
         data = request.get_json()
         try:
-            usuario = self.confirmar_cadastro_use_case.usuario_repository.buscar_por_email(email)
-            if not usuario:
-                return jsonify({'erro': 'Usuário não encontrado'}), 404
-            
-            usuario.nome = data.get('nome', usuario.nome)
-            usuario.cnpj = data.get('cnpj', usuario.cnpj)
-            usuario.celular = data.get('celular', usuario.celular)
-            usuario.senha = data.get('senha', usuario.senha)
-            
-            self.confirmar_cadastro_use_case.usuario_repository.atualizar(usuario)
+            self.atualizar_cadastro_use_case.execute(
+                email=email,
+                nome=data.get('nome'),
+                cnpj=data.get('cnpj'),
+                celular=data.get('celular'),
+                senha=data.get('senha')
+            )
             return jsonify({'mensagem': 'Usuário atualizado com sucesso!'}), 200
+        except ValueError as e:
+            return jsonify({'erro': str(e)}), 404
         except Exception as e:
             return jsonify({'erro': 'Erro ao atualizar usuário', 'detalhes': str(e)}), 500
         
+    @jwt_required()
     def buscar_por_email_usuario(self, email):
         try:
-            usuario = self.buscar_usuario_por_email_use_case.usuario_repository.buscar_por_email(email)
-
-            if not usuario:
-                return jsonify({'erro': 'Usuário não encontrado'}), 404
-
+            usuario = self.buscar_usuario_por_email_use_case.execute(email)
             return jsonify({
                 "id": usuario.id,
                 "nome": usuario.nome,
-                "telefone":usuario.celular,
+                "telefone": usuario.celular,
                 "email": usuario.email,
                 "status": usuario.status
             }), 200
-
+        except ValueError as e:
+            return jsonify({'erro': str(e)}), 404
         except Exception as e:
-            return jsonify({
-                'erro': 'Erro ao tentar encontrar usuário',
-                'detalhes': str(e)
-            }), 500
+            return jsonify({'erro': 'Erro ao tentar encontrar usuário', 'detalhes': str(e)}), 500

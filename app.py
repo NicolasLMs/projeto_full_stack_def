@@ -7,7 +7,7 @@ from infrastructure.database.models import db
 from infrastructure.repositories.usuario_repository_impl import UsuarioRepositoryImpl
 from infrastructure.repositories.produto_repository_impl import ProdutoRepositoryImpl
 from infrastructure.services.twilio_sms_service import TwilioSmsService
-from infrastructure.services.hash_service import HashService
+from infrastructure.services.hash_service import HashServiceImpl
 from infrastructure.services.token_service import JWTService
 
 from application.use_cases.criar_usuario import CriarUsuarioUseCase
@@ -43,7 +43,7 @@ with app.app_context():
 usuario_repository = UsuarioRepositoryImpl()
 produto_repository = ProdutoRepositoryImpl()
 sms_service = TwilioSmsService()
-hash_service = HashService()
+hash_service = HashServiceImpl()
 token_service = JWTService()
 
 # Casos de uso

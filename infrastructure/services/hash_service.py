@@ -1,7 +1,7 @@
 import bcrypt
 from domain.ports.hash_service import HashService
 
-class HashService(HashService):
+class HashServiceImpl(HashService):
     def hash_senha(self, senha):
         senha = str(senha)
         salt = bcrypt.gensalt()

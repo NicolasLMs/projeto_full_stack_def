@@ -4,11 +4,12 @@ import random
 from dotenv import load_dotenv
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
+from domain.ports.sms_service import SmsService
 
 load_dotenv()
 
 
-class TwilioSmsService:
+class TwilioSmsService(SmsService):
 
     def __init__(self):
 

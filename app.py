@@ -52,7 +52,7 @@ listar_usuarios_use_case = ListarUsuariosUseCase(usuario_repository)
 confirmar_cadastro_use_case = ConfirmarCadastroUsuarioUseCase(usuario_repository, sms_service)
 login_use_case = LoginUseCase(usuario_repository, hash_service, token_service)
 buscar_usuario_use_case= Buscar_por_EmailUsuarioUseCase(usuario_repository)
-atualizar_cadastro_use_case = AtualizarCadastroUsuarioUseCase(usuario_repository)
+atualizar_cadastro_use_case = AtualizarCadastroUsuarioUseCase(usuario_repository, hash_service)
 criar_produto_use_case = CriarProdutoUseCase(produto_repository)
 listar_produtos_use_case = ListarProdutosUseCase(produto_repository)
 

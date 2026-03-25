@@ -1,8 +1,9 @@
 class AtualizarCadastroUsuarioUseCase:
-    def __init__(self, usuario_repository):
+    def __init__(self, usuario_repository, hash_service):
         self.usuario_repository = usuario_repository
+        self.hash_service = hash_service
     
-    def execute(self, email, nome=None, cnpj=None, celular=None, senha=None):
+    def execute(self, email, nome=None, cnpj=None, celular=None, senha=None, novo_email=None):
         usuario = self.usuario_repository.buscar_por_email(email)
         if not usuario:
             raise ValueError('Usuário não encontrado')
@@ -14,7 +15,9 @@ class AtualizarCadastroUsuarioUseCase:
         if celular is not None:
             usuario.celular = celular
         if senha is not None:
-            usuario.senha = senha
+            usuario.senha = self.hash_service.hash_senha(senha)
+        if novo_email is not None:
+            usuario.email = novo_email
         
         self.usuario_repository.atualizar(usuario)
         return usuario

@@ -74,7 +74,8 @@ class UsuarioController:
                 nome=data.get('nome'),
                 cnpj=data.get('cnpj'),
                 celular=data.get('celular'),
-                senha=data.get('senha')
+                senha=data.get('senha'),
+                novo_email=data.get('email')
             )
             return jsonify({'mensagem': 'Usuário atualizado com sucesso!'}), 200
         except ValueError as e:

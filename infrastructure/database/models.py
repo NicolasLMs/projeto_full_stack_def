@@ -8,7 +8,7 @@ class UsuarioModel(db.Model):
     nome = db.Column(db.String(30), nullable=False)
     cnpj = db.Column(db.String(14), nullable=False, unique=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    senha = db.Column(db.String(14), nullable=False)
+    senha = db.Column(db.String(255), nullable=False)
     celular = db.Column(db.String(100), unique=False, nullable=False)
     status = db.Column(db.Boolean, default=False)
 

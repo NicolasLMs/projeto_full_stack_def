@@ -53,15 +53,19 @@ class UsuarioRepositoryImpl(UsuarioRepository):
         )
     
     def atualizar(self, usuario):
-        usuario_model = UsuarioModel.query.filter_by(id=usuario.id).first()
-        if usuario_model:
-            usuario_model.nome = usuario.nome
-            usuario_model.cnpj = usuario.cnpj
-            usuario_model.email = usuario.email
-            usuario_model.celular = usuario.celular
-            usuario_model.senha = usuario.senha
-            usuario_model.status = usuario.status
-            db.session.commit()
-        return usuario
+        try:
+            usuario_model = UsuarioModel.query.filter_by(id=usuario.id).first()
+            if usuario_model:
+                usuario_model.nome = usuario.nome
+                usuario_model.cnpj = usuario.cnpj
+                usuario_model.email = usuario.email
+                usuario_model.celular = usuario.celular
+                usuario_model.senha = usuario.senha
+                usuario_model.status = usuario.status
+                db.session.commit()
+            return usuario
+        except Exception as e:
+            db.session.rollback()
+            raise ValueError(f'Erro ao atualizar usuário: {str(e)}')
 
             

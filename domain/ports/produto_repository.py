@@ -12,3 +12,7 @@ class ProdutoRepository(ABC):
     @abstractmethod
     def buscar_por_id(self, id):
         pass
+
+    @abstractmethod
+    def atualizar(self,id):
+        pass

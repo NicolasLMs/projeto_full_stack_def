@@ -46,3 +46,21 @@ class ProdutoController:
             'imagem': p.imagem,
             'id_usuario': p.id_usuario
         } for p in produtos])
+
+    @jwt_required()
+    def atualizar_produto(self, id):
+        data = request.get_json()
+        try:
+            self.atualizar_cadastro_use_case.execute(
+                email=email,
+                nome=data.get('nome'),
+                cnpj=data.get('cnpj'),
+                celular=data.get('celular'),
+                senha=data.get('senha'),
+                novo_email=data.get('email')
+            )
+            return jsonify({'mensagem': 'Usuário atualizado com sucesso!'}), 200
+        except ValueError as e:
+            return jsonify({'erro': str(e)}), 404
+        except Exception as e:
+            return jsonify({'erro': 'Erro ao atualizar usuário', 'detalhes': str(e)}), 500

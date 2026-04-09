@@ -46,3 +46,31 @@ class ProdutoRepositoryImpl(ProdutoRepository):
             id=produto_model.id,
             status=produto_model.status
         )
+    
+    def atualizar(self, id, novos_dados):
+
+        produto = ProdutoModel.query.get(id) 
+        
+
+        if not produto:
+            raise ValueError('Produto não encontrado')
+
+        try:
+
+            if 'nome' in novos_dados:
+                produto.nome = novos_dados['nome']
+            if 'preco' in novos_dados:
+                produto.preco = novos_dados['preco']
+            if 'quantidade' in novos_dados:
+                produto.quantidade = novos_dados['quantidade']
+            if 'imagem' in novos_dados:
+                produto.imagem = novos_dados['imagem']
+            if 'status' in novos_dados:
+                produto.status = novos_dados['status']
+            db.session.commit()
+            
+            return produto
+
+        except Exception as e:
+            db.session.rollback()
+            raise ValueError(f'Erro ao atualizar produto: {str(e)}')

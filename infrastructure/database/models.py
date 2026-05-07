@@ -36,6 +36,7 @@ class VendaModel(db.Model):
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     quantidade_vendida = db.Column(db.Integer, nullable=False)
     preco_unitario = db.Column(db.Float, nullable=False)
+    forma_pagamento = db.Column(db.String(20), nullable=False, default='pix')
     produto = db.relationship('ProdutoModel', backref='vendas')
     usuario = db.relationship('UsuarioModel', backref='vendas')
 

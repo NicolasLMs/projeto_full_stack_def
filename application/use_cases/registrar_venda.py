@@ -6,7 +6,7 @@ class RegistrarVendaUseCase:
         self.produto_repository = produto_repository
         self.usuario_repository = usuario_repository
 
-    def execute(self, id_produto, quantidade_vendida, id_usuario):
+    def execute(self, id_produto, quantidade_vendida, id_usuario, forma_pagamento='pix'):
         # Valida dados de entrada
         if not id_produto or not isinstance(id_produto, int) or id_produto <= 0:
             raise ValueError('id_produto deve ser um inteiro positivo')
@@ -34,7 +34,8 @@ class RegistrarVendaUseCase:
             id_produto=id_produto,
             id_usuario=id_usuario,
             quantidade_vendida=quantidade_vendida,
-            preco_unitario=produto.preco
+            preco_unitario=produto.preco,
+            forma_pagamento=forma_pagamento
         )
         venda = self.venda_repository.criar(venda)
 

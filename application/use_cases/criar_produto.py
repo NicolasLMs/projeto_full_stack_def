@@ -5,5 +5,5 @@ class CriarProdutoUseCase:
         self.produto_repository = produto_repository
     
     def execute(self, nome, preco, quantidade, id_usuario, imagem=None):
-        produto = Produto(nome, preco, quantidade, id_usuario, imagem)
+        produto = Produto(nome, preco, quantidade, id_usuario, imagem, status=True)
         return self.produto_repository.criar(produto)

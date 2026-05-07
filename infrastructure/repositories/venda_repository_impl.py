@@ -9,7 +9,8 @@ class VendaRepositoryImpl(VendaRepository):
                 id_produto=venda.id_produto,
                 id_usuario=venda.id_usuario,
                 quantidade_vendida=venda.quantidade_vendida,
-                preco_unitario=venda.preco_unitario
+                preco_unitario=venda.preco_unitario,
+                forma_pagamento=venda.forma_pagamento
             )
             db.session.add(venda_model)
             db.session.commit()
@@ -26,5 +27,6 @@ class VendaRepositoryImpl(VendaRepository):
             id_produto=v.id_produto,
             id_usuario=v.id_usuario,
             quantidade_vendida=v.quantidade_vendida,
-            preco_unitario=v.preco_unitario
+            preco_unitario=v.preco_unitario,
+            forma_pagamento=v.forma_pagamento
         ) for v in vendas_model]

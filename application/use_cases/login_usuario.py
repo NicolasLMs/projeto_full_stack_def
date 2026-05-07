@@ -9,16 +9,16 @@ class LoginUseCase:
         usuario = self.repo.buscar_por_email(email)
 
         if not usuario:
-            return "Usuário não localizado"
+            raise ValueError('Usuário não localizado')
         
         if usuario.status is not True:
-            return "Conta inativa ou pendente de verificação."
+            raise ValueError('Conta inativa ou pendente de verificação.')
         
         senha_str = str(senha)
         senha_valida = self.hash_service.verifica_senha(senha_str, usuario.senha)
         
         if not senha_valida:
-            return 'Senha inválida.'
+            raise ValueError('Senha inválida.')
         
         token = self.token_service.gerar_token(usuario.id)
             

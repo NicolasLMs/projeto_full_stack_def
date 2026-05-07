@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 
@@ -25,9 +26,11 @@ from application.use_cases.historico_vendas import HistoricoVendasUseCase
 from adapters.http.usuario_controller import UsuarioController
 from adapters.http.produto_controller import ProdutoController
 from adapters.http.venda_controller import VendaController
+from adapters.http.dashboard_controller import DashboardController
 from adapters.http.routes import configure_routes
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'meu_banco.db')
@@ -69,9 +72,10 @@ historico_vendas_use_case = HistoricoVendasUseCase(venda_repository)
 usuario_controller = UsuarioController(criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case, buscar_usuario_use_case, atualizar_cadastro_use_case)
 produto_controller = ProdutoController(criar_produto_use_case, listar_produtos_use_case, atualizar_produto_use_case)
 venda_controller = VendaController(registrar_venda_use_case, historico_vendas_use_case)
+dashboard_controller = DashboardController(listar_produtos_use_case, historico_vendas_use_case)
 
 # Rotas
-configure_routes(app, usuario_controller, produto_controller, venda_controller)
+configure_routes(app, usuario_controller, produto_controller, venda_controller, dashboard_controller)
 
 if __name__ == '__main__':
     app.run(debug=True)

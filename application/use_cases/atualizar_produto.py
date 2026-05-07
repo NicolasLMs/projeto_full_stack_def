@@ -2,8 +2,8 @@ class AtualizarProdutoUseCase:
     def __init__(self, produto_repository):
         self.produto_repository = produto_repository
     
-    def execute(self, nome, preco, quantidade, id_usuario, imagem=None):
-        produto = self.produto_repository.listar_todos(id)
+    def execute(self, id, nome=None, preco=None, quantidade=None, id_usuario=None, status=None, imagem=None):
+        produto = self.produto_repository.buscar_por_id_sem_filtro(id)
         if not produto:
             raise ValueError('Produto não encontrado')
         
@@ -14,9 +14,11 @@ class AtualizarProdutoUseCase:
         if quantidade is not None:
             produto.quantidade = quantidade
         if id_usuario is not None:
-            produto.id_usuario = self.hash_service.hash_id_usuario(id_usuario)
+            produto.id_usuario = id_usuario
         if imagem is not None:
-            produto.email = imagem
-        
+            produto.imagem = imagem
+        if status is not None:
+            produto.status = status
+
         self.produto_repository.atualizar(produto)
         return produto

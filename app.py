@@ -18,9 +18,13 @@ from application.use_cases.buscar_por_email import Buscar_por_EmailUsuarioUseCas
 from application.use_cases.atualizar_cadastro import AtualizarCadastroUsuarioUseCase
 from application.use_cases.criar_produto import CriarProdutoUseCase
 from application.use_cases.listar_produtos import ListarProdutosUseCase
+from application.use_cases.atualizar_produto import AtualizarProdutoUseCase
+from application.use_cases.registrar_venda import RegistrarVendaUseCase
+from application.use_cases.historico_vendas import HistoricoVendasUseCase
 
 from adapters.http.usuario_controller import UsuarioController
 from adapters.http.produto_controller import ProdutoController
+from adapters.http.venda_controller import VendaController
 from adapters.http.routes import configure_routes
 
 app = Flask(__name__)
@@ -46,6 +50,9 @@ sms_service = TwilioSmsService()
 hash_service = HashServiceImpl()
 token_service = JWTService()
 
+from infrastructure.repositories.venda_repository_impl import VendaRepositoryImpl
+venda_repository = VendaRepositoryImpl()
+
 # Casos de uso
 criar_usuario_use_case = CriarUsuarioUseCase(usuario_repository, sms_service, hash_service)
 listar_usuarios_use_case = ListarUsuariosUseCase(usuario_repository)
@@ -55,13 +62,16 @@ buscar_usuario_use_case= Buscar_por_EmailUsuarioUseCase(usuario_repository)
 atualizar_cadastro_use_case = AtualizarCadastroUsuarioUseCase(usuario_repository, hash_service)
 criar_produto_use_case = CriarProdutoUseCase(produto_repository)
 listar_produtos_use_case = ListarProdutosUseCase(produto_repository)
-
+atualizar_produto_use_case = AtualizarProdutoUseCase(produto_repository)
+registrar_venda_use_case = RegistrarVendaUseCase(venda_repository, produto_repository, usuario_repository)
+historico_vendas_use_case = HistoricoVendasUseCase(venda_repository)
 # Controllers
 usuario_controller = UsuarioController(criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case, buscar_usuario_use_case, atualizar_cadastro_use_case)
-produto_controller = ProdutoController(criar_produto_use_case, listar_produtos_use_case)
+produto_controller = ProdutoController(criar_produto_use_case, listar_produtos_use_case, atualizar_produto_use_case)
+venda_controller = VendaController(registrar_venda_use_case, historico_vendas_use_case)
 
 # Rotas
-configure_routes(app, usuario_controller, produto_controller)
+configure_routes(app, usuario_controller, produto_controller, venda_controller)
 
 if __name__ == '__main__':
     app.run(debug=True)

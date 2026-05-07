@@ -52,6 +52,20 @@ class UsuarioRepositoryImpl(UsuarioRepository):
             status=usuario_model.status
         )
     
+    def buscar_por_id(self, id):
+        usuario_model = UsuarioModel.query.get(id)
+        if not usuario_model:
+            return None
+        return Usuario(
+            nome=usuario_model.nome,
+            cnpj=usuario_model.cnpj,
+            email=usuario_model.email,
+            celular=usuario_model.celular,
+            senha=usuario_model.senha,
+            id=usuario_model.id,
+            status=usuario_model.status
+        )
+
     def atualizar(self, usuario):
         try:
             usuario_model = UsuarioModel.query.filter_by(id=usuario.id).first()

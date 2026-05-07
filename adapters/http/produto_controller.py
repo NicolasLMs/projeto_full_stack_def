@@ -2,9 +2,10 @@ from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 class ProdutoController:
-    def __init__(self, criar_produto_use_case, listar_produtos_use_case):
+    def __init__(self, criar_produto_use_case, listar_produtos_use_case,atualizar_produto_use_case):
         self.criar_produto_use_case = criar_produto_use_case
         self.listar_produtos_use_case = listar_produtos_use_case
+        self.atualizar_produto_use_case = atualizar_produto_use_case
     
     @jwt_required()
     def criar_produto(self):
@@ -22,8 +23,9 @@ class ProdutoController:
     
     @jwt_required()
     def listar_produtos(self, id=None):
+        id_usuario = int(get_jwt_identity())
         if id:
-            produto = self.listar_produtos_use_case.execute(id)
+            produto = self.listar_produtos_use_case.execute(id_usuario=id_usuario, id=id)
             if produto:
                 return jsonify({
                     'id': produto.id,
@@ -36,7 +38,7 @@ class ProdutoController:
                 })
             return jsonify({'erro': 'Produto não encontrado'}), 404
         
-        produtos = self.listar_produtos_use_case.execute()
+        produtos = self.listar_produtos_use_case.execute(id_usuario=id_usuario)
         return jsonify([{
             'id': p.id,
             'nome': p.nome,
@@ -51,16 +53,17 @@ class ProdutoController:
     def atualizar_produto(self, id):
         data = request.get_json()
         try:
-            self.atualizar_cadastro_use_case.execute(
-                email=email,
+            self.atualizar_produto_use_case.execute(
+                id=id,
                 nome=data.get('nome'),
-                cnpj=data.get('cnpj'),
-                celular=data.get('celular'),
-                senha=data.get('senha'),
-                novo_email=data.get('email')
+                preco=data.get('preco'),
+                quantidade=data.get('quantidade'),
+                status=data.get('status'),
+                imagem=data.get('imagem'),
+                id_usuario=data.get('id_usuario')
             )
-            return jsonify({'mensagem': 'Usuário atualizado com sucesso!'}), 200
+            return jsonify({'mensagem': 'Produto atualizado com sucesso!'}), 200
         except ValueError as e:
             return jsonify({'erro': str(e)}), 404
         except Exception as e:
-            return jsonify({'erro': 'Erro ao atualizar usuário', 'detalhes': str(e)}), 500
+            return jsonify({'erro': 'Erro ao atualizar produto', 'detalhes': str(e)}), 500

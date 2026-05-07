@@ -21,8 +21,8 @@ class ProdutoRepositoryImpl(ProdutoRepository):
             db.session.rollback()
             raise ValueError('Erro ao cadastrar produto')
     
-    def listar_todos(self):
-        produtos_model = ProdutoModel.query.all()
+    def listar_todos(self, id_usuario):
+        produtos_model = ProdutoModel.query.filter_by(id_usuario=id_usuario).all()
         return [Produto(
             nome=p.nome,
             preco=p.preco,
@@ -33,8 +33,8 @@ class ProdutoRepositoryImpl(ProdutoRepository):
             status=p.status
         ) for p in produtos_model]
     
-    def buscar_por_id(self, id):
-        produto_model = ProdutoModel.query.get(id)
+    def buscar_por_id(self, id, id_usuario):
+        produto_model = ProdutoModel.query.filter_by(id=id, id_usuario=id_usuario).first()
         if not produto_model:
             return None
         return Produto(
@@ -47,28 +47,35 @@ class ProdutoRepositoryImpl(ProdutoRepository):
             status=produto_model.status
         )
     
-    def atualizar(self, id, novos_dados):
+    def buscar_por_id_sem_filtro(self, id):
+        produto_model = ProdutoModel.query.get(id)
+        if not produto_model:
+            return None
+        return Produto(
+            nome=produto_model.nome,
+            preco=produto_model.preco,
+            quantidade=produto_model.quantidade,
+            id_usuario=produto_model.id_usuario,
+            imagem=produto_model.imagem,
+            id=produto_model.id,
+            status=produto_model.status
+        )
 
-        produto = ProdutoModel.query.get(id) 
-        
+    def atualizar(self, produto):
+        produto_model = ProdutoModel.query.get(produto.id)
 
-        if not produto:
+        if not produto_model:
             raise ValueError('Produto não encontrado')
 
         try:
-
-            if 'nome' in novos_dados:
-                produto.nome = novos_dados['nome']
-            if 'preco' in novos_dados:
-                produto.preco = novos_dados['preco']
-            if 'quantidade' in novos_dados:
-                produto.quantidade = novos_dados['quantidade']
-            if 'imagem' in novos_dados:
-                produto.imagem = novos_dados['imagem']
-            if 'status' in novos_dados:
-                produto.status = novos_dados['status']
+            produto_model.nome = produto.nome
+            produto_model.preco = produto.preco
+            produto_model.quantidade = produto.quantidade
+            produto_model.imagem = produto.imagem
+            produto_model.status = produto.status
+            produto_model.id_usuario = produto.id_usuario
             db.session.commit()
-            
+
             return produto
 
         except Exception as e:

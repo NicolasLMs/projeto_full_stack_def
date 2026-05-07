@@ -1,4 +1,4 @@
-def configure_routes(app, usuario_controller, produto_controller):
+def configure_routes(app, usuario_controller, produto_controller, venda_controller):
     app.add_url_rule('/cadastra_usuario', view_func=usuario_controller.criar_usuario, methods=['POST'])
     app.add_url_rule('/confirma_cadastro/<string:email>', view_func=usuario_controller.confirmar_cadastro, methods=['POST'])
     app.add_url_rule('/listar_usuario', view_func=usuario_controller.listar_usuario, methods=['GET'])
@@ -9,3 +9,7 @@ def configure_routes(app, usuario_controller, produto_controller):
     app.add_url_rule('/cadastra_produto', view_func=produto_controller.criar_produto, methods=['POST'])
     app.add_url_rule('/listar_produto', view_func=produto_controller.listar_produtos, methods=['GET'])
     app.add_url_rule('/listar_produto/<int:id>', view_func=produto_controller.listar_produtos, methods=['GET'], endpoint='listar_produto_por_id')
+    app.add_url_rule('/atualizar_produto/<int:id>', view_func=produto_controller.atualizar_produto, methods=['PUT'])
+
+    app.add_url_rule('/registrar_venda', view_func=venda_controller.registrar_venda, methods=['POST'])
+    app.add_url_rule('/historico_vendas', view_func=venda_controller.historico_vendas, methods=['GET'])

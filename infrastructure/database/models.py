@@ -28,3 +28,16 @@ class ProdutoModel(db.Model):
 
     def __repr__(self):
         return f'Usuário: {self.nome}, ID: {self.id}'
+
+class VendaModel(db.Model):
+    __tablename__ = 'venda'
+    id = db.Column(db.Integer, primary_key=True)
+    id_produto = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=False)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    quantidade_vendida = db.Column(db.Integer, nullable=False)
+    preco_unitario = db.Column(db.Float, nullable=False)
+    produto = db.relationship('ProdutoModel', backref='vendas')
+    usuario = db.relationship('UsuarioModel', backref='vendas')
+
+    def __repr__(self):
+        return f'Venda ID: {self.id}, Produto: {self.id_produto}'

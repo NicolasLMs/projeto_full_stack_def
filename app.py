@@ -20,6 +20,7 @@ from application.use_cases.atualizar_cadastro import AtualizarCadastroUsuarioUse
 from application.use_cases.criar_produto import CriarProdutoUseCase
 from application.use_cases.listar_produtos import ListarProdutosUseCase
 from application.use_cases.atualizar_produto import AtualizarProdutoUseCase
+from application.use_cases.deletar_produto import DeletarProdutoUseCase
 from application.use_cases.registrar_venda import RegistrarVendaUseCase
 from application.use_cases.historico_vendas import HistoricoVendasUseCase
 
@@ -66,11 +67,12 @@ atualizar_cadastro_use_case = AtualizarCadastroUsuarioUseCase(usuario_repository
 criar_produto_use_case = CriarProdutoUseCase(produto_repository)
 listar_produtos_use_case = ListarProdutosUseCase(produto_repository)
 atualizar_produto_use_case = AtualizarProdutoUseCase(produto_repository)
+deletar_produto_use_case = DeletarProdutoUseCase(produto_repository)
 registrar_venda_use_case = RegistrarVendaUseCase(venda_repository, produto_repository, usuario_repository)
 historico_vendas_use_case = HistoricoVendasUseCase(venda_repository)
 # Controllers
 usuario_controller = UsuarioController(criar_usuario_use_case, listar_usuarios_use_case, confirmar_cadastro_use_case, login_use_case, buscar_usuario_use_case, atualizar_cadastro_use_case)
-produto_controller = ProdutoController(criar_produto_use_case, listar_produtos_use_case, atualizar_produto_use_case)
+produto_controller = ProdutoController(criar_produto_use_case, listar_produtos_use_case, atualizar_produto_use_case, deletar_produto_use_case)
 venda_controller = VendaController(registrar_venda_use_case, historico_vendas_use_case)
 dashboard_controller = DashboardController(listar_produtos_use_case, historico_vendas_use_case)
 

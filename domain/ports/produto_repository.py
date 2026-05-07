@@ -20,3 +20,7 @@ class ProdutoRepository(ABC):
     @abstractmethod
     def atualizar(self, produto):
         pass
+
+    @abstractmethod
+    def deletar(self, id):
+        pass

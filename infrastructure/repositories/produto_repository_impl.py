@@ -81,3 +81,14 @@ class ProdutoRepositoryImpl(ProdutoRepository):
         except Exception as e:
             db.session.rollback()
             raise ValueError(f'Erro ao atualizar produto: {str(e)}')
+
+    def deletar(self, id):
+        produto_model = ProdutoModel.query.get(id)
+        if not produto_model:
+            raise ValueError('Produto não encontrado')
+        try:
+            db.session.delete(produto_model)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise ValueError(f'Erro ao deletar produto: {str(e)}')
